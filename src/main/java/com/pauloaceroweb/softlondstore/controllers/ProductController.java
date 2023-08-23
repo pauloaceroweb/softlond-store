@@ -89,9 +89,7 @@ public class ProductController {
     }
 
     @GetMapping("/findByPriceRange")
-    public ResponseEntity<?> findByPriceRange(
-            @RequestParam BigDecimal minPrice,
-            @RequestParam BigDecimal maxPrice) {
+    public ResponseEntity<?> findByPriceRange(@RequestParam BigDecimal minPrice, @RequestParam BigDecimal maxPrice) {
 
         if (minPrice == null || maxPrice == null) {
             return ResponseEntity.badRequest().build();
