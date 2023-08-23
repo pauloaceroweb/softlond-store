@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -85,6 +86,28 @@ public class ProductController {
             return ResponseEntity.ok("Registro Actualizado Correctamente");
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/findByPriceRange")
+    public ResponseEntity<?> findByPriceRange(
+            @RequestParam BigDecimal minPrice,
+            @RequestParam BigDecimal maxPrice) {
+
+        if (minPrice == null || maxPrice == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<ProductDTO> productList = productService.findByPriceInRange(minPrice, maxPrice)
+                .stream()
+                .map(product -> ProductDTO.builder()
+                        .id(product.getId())
+                        .name(product.getName())
+                        .price(product.getPrice())
+                        .category(product.getCategory())
+                        .build())
+                .toList();
+
+        return ResponseEntity.ok(productList);
     }
 
     @DeleteMapping("/delete/{id}")
