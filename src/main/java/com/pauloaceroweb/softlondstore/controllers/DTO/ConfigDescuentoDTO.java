@@ -1,6 +1,6 @@
 package com.pauloaceroweb.softlondstore.controllers.DTO;
 
-import com.pauloaceroweb.softlondstore.entities.Category;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,10 +12,10 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProductDTO {
+public class ConfigDescuentoDTO {
 
     private Long id;
-    private String name;
-    private BigDecimal price;
-    private Category category;
+    private BigDecimal valorBaseDescuento;
+    private Integer descuentoVenta;
+    private Integer descuentoSorteo;
 }

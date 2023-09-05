@@ -1,8 +1,8 @@
 package com.pauloaceroweb.softlondstore.controllers;
 
-import com.pauloaceroweb.softlondstore.controllers.DTO.ProductDTO;
-import com.pauloaceroweb.softlondstore.entities.Product;
-import com.pauloaceroweb.softlondstore.service.contracts.IProductService;
+import com.pauloaceroweb.softlondstore.controllers.DTO.ProductoDTO;
+import com.pauloaceroweb.softlondstore.entities.Producto;
+import com.pauloaceroweb.softlondstore.service.contracts.IProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,26 +15,26 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
-public class ProductController {
+public class ProductoController {
 
     @Autowired
-    private IProductService productService;
+    private IProductoService productService;
 
     @GetMapping("/find/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
-        Optional<Product> productOptional = productService.findById(id);
+        Optional<Producto> productOptional = productService.findById(id);
 
         if (productOptional.isPresent()) {
-            Product product = productOptional.get();
+            Producto producto = productOptional.get();
 
-            ProductDTO productDTO = ProductDTO.builder()
-                    .id(product.getId())
-                    .name(product.getName())
-                    .price(product.getPrice())
-                    .category(product.getCategory())
+            ProductoDTO productoDTO = ProductoDTO.builder()
+                    .id(producto.getId())
+                    .name(producto.getName())
+                    .price(producto.getPrice())
+                    .categoria(producto.getCategoria())
                     .build();
 
-            return ResponseEntity.ok(productDTO);
+            return ResponseEntity.ok(productoDTO);
         }
 
         return ResponseEntity.notFound().build();
@@ -42,13 +42,13 @@ public class ProductController {
 
     @GetMapping("/findAll")
     public ResponseEntity<?> findAll() {
-        List<ProductDTO> productList = productService.findAll()
+        List<ProductoDTO> productList = productService.findAll()
                 .stream()
-                .map(product -> ProductDTO.builder()
+                .map(product -> ProductoDTO.builder()
                         .id(product.getId())
                         .name(product.getName())
                         .price(product.getPrice())
-                        .category(product.getCategory())
+                        .categoria(product.getCategoria())
                         .build())
                 .toList();
 
@@ -56,33 +56,33 @@ public class ProductController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody ProductDTO productDTO) throws URISyntaxException {
-        if(productDTO.getName().isBlank() || productDTO.getPrice() == null || productDTO.getCategory() == null) {
+    public ResponseEntity<?> save(@RequestBody ProductoDTO productoDTO) throws URISyntaxException {
+        if(productoDTO.getName().isBlank() || productoDTO.getPrice() == null || productoDTO.getCategoria() == null) {
             return ResponseEntity.badRequest().build();
         }
 
-        Product product = Product.builder()
-                .name(productDTO.getName())
-                .price(productDTO.getPrice())
-                .category(productDTO.getCategory())
+        Producto producto = Producto.builder()
+                .name(productoDTO.getName())
+                .price(productoDTO.getPrice())
+                .categoria(productoDTO.getCategoria())
                 .build();
 
-        productService.save(product);
+        productService.save(producto);
 
         return ResponseEntity.created(new URI("/product/save")).build();
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
-        Optional<Product> productOptional = productService.findById(id);
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody ProductoDTO productoDTO) {
+        Optional<Producto> productOptional = productService.findById(id);
 
         if (productOptional.isPresent()) {
-            Product product = productOptional.get();
-            product.setName(productDTO.getName());
-            product.setPrice(productDTO.getPrice());
-            product.setCategory(productDTO.getCategory());
+            Producto producto = productOptional.get();
+            producto.setName(productoDTO.getName());
+            producto.setPrice(productoDTO.getPrice());
+            producto.setCategoria(productoDTO.getCategoria());
 
-            productService.save(product);
+            productService.save(producto);
             return ResponseEntity.ok("Registro Actualizado Correctamente");
         }
         return ResponseEntity.notFound().build();
@@ -95,13 +95,13 @@ public class ProductController {
             return ResponseEntity.badRequest().build();
         }
 
-        List<ProductDTO> productList = productService.findByPriceInRange(minPrice, maxPrice)
+        List<ProductoDTO> productList = productService.findByPriceInRange(minPrice, maxPrice)
                 .stream()
-                .map(product -> ProductDTO.builder()
+                .map(product -> ProductoDTO.builder()
                         .id(product.getId())
                         .name(product.getName())
                         .price(product.getPrice())
-                        .category(product.getCategory())
+                        .categoria(product.getCategoria())
                         .build())
                 .toList();
 

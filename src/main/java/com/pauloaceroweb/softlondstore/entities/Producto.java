@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
 
 @Setter
 @Getter
@@ -13,16 +12,18 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "category")
-public class Category {
+@Table(name = "product")
+public class Producto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
+    private BigDecimal price;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @ManyToOne
+    @JoinColumn(name = "categorie_id")
     @JsonIgnore
-    private List<Product> productList = new ArrayList<>();
+    private Categoria categoria;
 }
+

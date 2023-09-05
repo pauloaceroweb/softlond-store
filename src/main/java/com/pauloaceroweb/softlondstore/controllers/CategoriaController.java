@@ -1,8 +1,8 @@
 package com.pauloaceroweb.softlondstore.controllers;
 
-import com.pauloaceroweb.softlondstore.controllers.DTO.CategoryDTO;
-import com.pauloaceroweb.softlondstore.entities.Category;
-import com.pauloaceroweb.softlondstore.service.contracts.ICategoryService;
+import com.pauloaceroweb.softlondstore.controllers.DTO.CategoriaDTO;
+import com.pauloaceroweb.softlondstore.entities.Categoria;
+import com.pauloaceroweb.softlondstore.service.contracts.ICategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,25 +14,25 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/category")
-public class CategoryController {
+public class CategoriaController {
 
     @Autowired
-    private ICategoryService categoryService;
+    private ICategoriaService categoryService;
 
     @GetMapping("/find/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
-        Optional<Category> categoryOptional = categoryService.findById(id);
+        Optional<Categoria> categoryOptional = categoryService.findById(id);
 
         if (categoryOptional.isPresent()) {
-            Category category = categoryOptional.get();
+            Categoria categoria = categoryOptional.get();
 
-            CategoryDTO categoryDTO = CategoryDTO.builder()
-                    .id(category.getId())
-                    .name(category.getName())
-                    .productList(category.getProductList())
+            CategoriaDTO categoriaDTO = CategoriaDTO.builder()
+                    .id(categoria.getId())
+                    .name(categoria.getName())
+                    .productoList(categoria.getProductoList())
                     .build();
 
-            return ResponseEntity.ok(categoryDTO);
+            return ResponseEntity.ok(categoriaDTO);
         }
         return ResponseEntity.notFound().build();
     }
@@ -40,12 +40,12 @@ public class CategoryController {
     @GetMapping("/findAll")
     public ResponseEntity<?> findAll() {
 
-        List<CategoryDTO> categoryList = categoryService.findAll()
+        List<CategoriaDTO> categoryList = categoryService.findAll()
                 .stream()
-                .map(category -> CategoryDTO.builder()
+                .map(category -> CategoriaDTO.builder()
                         .id(category.getId())
                         .name(category.getName())
-                        .productList(category.getProductList())
+                        .productoList(category.getProductoList())
                         .build())
                 .toList();
 
@@ -53,26 +53,26 @@ public class CategoryController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody CategoryDTO categoryDTO) throws URISyntaxException {
-        if (categoryDTO.getName().isBlank()) {
+    public ResponseEntity<?> save(@RequestBody CategoriaDTO categoriaDTO) throws URISyntaxException {
+        if (categoriaDTO.getName().isBlank()) {
             return ResponseEntity.badRequest().build();
         }
 
-        categoryService.save(Category.builder()
-                .name(categoryDTO.getName())
+        categoryService.save(Categoria.builder()
+                .name(categoriaDTO.getName())
                 .build());
 
         return ResponseEntity.created(new URI("/category/save")).build();
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
-        Optional<Category> categoryOptional = categoryService.findById(id);
+    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody CategoriaDTO categoriaDTO) {
+        Optional<Categoria> categoryOptional = categoryService.findById(id);
 
         if (categoryOptional.isPresent()) {
-            Category category = categoryOptional.get();
-            category.setName(categoryDTO.getName());
-            categoryService.save(category);
+            Categoria categoria = categoryOptional.get();
+            categoria.setName(categoriaDTO.getName());
+            categoryService.save(categoria);
             return ResponseEntity.ok("Registro Actualizado Correctamente");
         }
 
