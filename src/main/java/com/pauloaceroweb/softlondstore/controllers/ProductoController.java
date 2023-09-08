@@ -1,7 +1,9 @@
 package com.pauloaceroweb.softlondstore.controllers;
 
 import com.pauloaceroweb.softlondstore.controllers.DTO.ProductoDTO;
+import com.pauloaceroweb.softlondstore.entities.Categoria;
 import com.pauloaceroweb.softlondstore.entities.Producto;
+import com.pauloaceroweb.softlondstore.service.contracts.ICategoriaService;
 import com.pauloaceroweb.softlondstore.service.contracts.IProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,8 @@ public class ProductoController {
 
     @Autowired
     private IProductoService productService;
+
+    private ICategoriaService categoriaService;
 
     @GetMapping("/find/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
@@ -75,12 +79,15 @@ public class ProductoController {
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody ProductoDTO productoDTO) {
         Optional<Producto> productOptional = productService.findById(id);
+        Optional<Categoria> categoriaOptional = categoriaService.findById(productoDTO.getCategoria().getId());
 
         if (productOptional.isPresent()) {
             Producto producto = productOptional.get();
+            Categoria categoria = categoriaOptional.get();
+
             producto.setName(productoDTO.getName());
             producto.setPrice(productoDTO.getPrice());
-            producto.setCategoria(productoDTO.getCategoria());
+            producto.setCategoria(categoria);
 
             productService.save(producto);
             return ResponseEntity.ok("Registro Actualizado Correctamente");

@@ -1,10 +1,8 @@
 package com.pauloaceroweb.softlondstore.service.contracts;
 
 
-import com.pauloaceroweb.softlondstore.entities.Producto;
 import com.pauloaceroweb.softlondstore.entities.Venta;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
